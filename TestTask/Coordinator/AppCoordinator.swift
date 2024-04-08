@@ -27,7 +27,6 @@ final class AppCoordinator: CoordinatorProtocol {
         mainViewModel.coordinator = self
         
         mainViewController.viewModel = mainViewModel
-        navigationController.navigationBar.isTranslucent = false
         navigationController.pushViewController(mainViewController, animated: true)
     }
 }

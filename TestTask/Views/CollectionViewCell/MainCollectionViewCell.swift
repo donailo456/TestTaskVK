@@ -38,10 +38,15 @@ final class MainCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Internal properties
     
+    func configure(with boardIndex: Square?) {
+        imageView.image = boardIndex?.playerImage
+    }
+    
     
     // MARK: - Private Methods
     
     private func setupViews() {
+        contentView.backgroundColor = .white
         self.contentView.addSubview(imageView)
         setupConstraint()
     }

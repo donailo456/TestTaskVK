@@ -17,6 +17,7 @@
 		E410CEDA2BC137DE0020342B /* CollectionViewAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E410CED92BC137DE0020342B /* CollectionViewAdapter.swift */; };
 		E410CEDD2BC1387E0020342B /* MainCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E410CEDC2BC1387E0020342B /* MainCollectionViewCell.swift */; };
 		E410CEE02BC139AD0020342B /* Square.swift in Sources */ = {isa = PBXBuildFile; fileRef = E410CEDF2BC139AD0020342B /* Square.swift */; };
+		E410CEE32BC13BDB0020342B /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = E410CEE22BC13BDB0020342B /* Player.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		E410CED92BC137DE0020342B /* CollectionViewAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewAdapter.swift; sourceTree = "<group>"; };
 		E410CEDC2BC1387E0020342B /* MainCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCollectionViewCell.swift; sourceTree = "<group>"; };
 		E410CEDF2BC139AD0020342B /* Square.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Square.swift; sourceTree = "<group>"; };
+		E410CEE22BC13BDB0020342B /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,9 +68,9 @@
 			children = (
 				E410CECF2BC1327B0020342B /* Application */,
 				E410CED42BC1329E0020342B /* Coordinator */,
+				E410CED72BC1337B0020342B /* ViewModels */,
 				E410CECE2BC1325C0020342B /* Views */,
 				E410CECD2BC132190020342B /* SupportingFilles */,
-				E410CED72BC1337B0020342B /* ViewModels */,
 			);
 			path = TestTask;
 			sourceTree = "<group>";
@@ -147,6 +149,7 @@
 			isa = PBXGroup;
 			children = (
 				E410CEDF2BC139AD0020342B /* Square.swift */,
+				E410CEE22BC13BDB0020342B /* Player.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -228,6 +231,7 @@
 				E410CED32BC1329A0020342B /* AppCoordinator.swift in Sources */,
 				E410CEBE2BC131FA0020342B /* MainViewController.swift in Sources */,
 				E410CEBA2BC131FA0020342B /* AppDelegate.swift in Sources */,
+				E410CEE32BC13BDB0020342B /* Player.swift in Sources */,
 				E410CED12BC132910020342B /* CoordinatorProtocol.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

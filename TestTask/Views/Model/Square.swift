@@ -7,7 +7,7 @@
 
 import UIKit
 
-struct Square: Hashable {
+class Square: Hashable {
     var isChecked: Bool
     var squareIndex: Int
     var playerImage: UIImage?
@@ -16,5 +16,17 @@ struct Square: Hashable {
         self.isChecked = isChecked
         self.squareIndex = squareIndex
         self.playerImage = playerImage
+    }
+    
+    func hash(into hasher: inout Hasher) {
+            hasher.combine(isChecked)
+            hasher.combine(squareIndex)
+            hasher.combine(playerImage)
+    }
+    
+    static func == (lhs: Square, rhs: Square) -> Bool {
+        return lhs.isChecked == rhs.isChecked &&
+                       lhs.squareIndex == rhs.squareIndex &&
+                       lhs.playerImage == rhs.playerImage
     }
 }
