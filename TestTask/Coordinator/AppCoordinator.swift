@@ -29,4 +29,14 @@ final class AppCoordinator: CoordinatorProtocol {
         mainViewController.viewModel = mainViewModel
         navigationController.pushViewController(mainViewController, animated: true)
     }
+    
+    func showWinnerAlert(restart: @escaping () -> Void) {
+        let alertController = UIAlertController(title: "Игра окончена", message: nil, preferredStyle: .alert)
+        let restartAction = UIAlertAction(title: "Начать заново", style: .default) { [weak self] _ in
+            guard let self = self else { return }
+            restart()
+        }
+        alertController.addAction(restartAction)
+        navigationController.present(alertController, animated: true, completion: nil)
+    }
 }

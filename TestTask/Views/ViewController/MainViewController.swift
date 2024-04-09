@@ -35,41 +35,11 @@ class MainViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemGray
         setupViews()
-        createPlayer()
+        viewModel?.createPlayer()
         bindViewModel()
     }
     
     // MARK: - Private Methods
-    
-    private func createPlayer() {
-        viewModel?.createPlayer(namep1: player1Name, namep2: player2Name)
-        if let player1 = viewModel?.getPlayer1() {
-            self.player1 = player1
-        }
-        if let player2 = viewModel?.getPlayer2() {
-            self.player2 = player2
-        }
-        currentPlayer = player1
-    }
-    
-    private func checkSquare (square: Square) {
-        switch currentPlayer.name {
-        case player1.name:
-            if viewModel?.checkSquare(player: player1, squareIndex: square.squareIndex) == true {
-                if !winOrDraw() {
-                    currentPlayer = player2
-                }
-            }
-        case player2.name:
-            if viewModel?.checkSquare(player: player2, squareIndex: square.squareIndex) == true {
-                if !winOrDraw() {
-                    currentPlayer = player1
-                }
-            }
-        default:
-            return
-        }
-    }
     
     private func setupViews() {
         view.addSubview(mainCollectionView)
@@ -85,15 +55,6 @@ class MainViewController: UIViewController {
         ])
     }
     
-    private func showWinnerAlert() {
-        let alertController = UIAlertController(title: "Игра окончена", message: nil, preferredStyle: .alert)
-        let restartAction = UIAlertAction(title: "Начать заново", style: .default) { [weak self] _ in
-            self?.viewModel?.resetBoard() // Перезапуск игры
-        }
-        alertController.addAction(restartAction)
-        present(alertController, animated: true, completion: nil)
-    }
-    
     private func bindViewModel() {
         viewModel?.createBoard()
         
@@ -103,22 +64,8 @@ class MainViewController: UIViewController {
         
         adapter.onDidSelectRow = { cell in
             guard let cell = cell else { return }
-            self.checkSquare(square: cell)
+            self.viewModel?.checkSquare(square: cell)
         }
-    }
-    
-    private func winOrDraw() -> Bool {
-        var gameEnded = false
-        guard let chekDraw = viewModel?.checkDraw(hasWon: viewModel?.checkWin(player: currentPlayer) ?? false) else { return gameEnded }
-        guard let chekWin = viewModel?.checkWin(player: currentPlayer) else { return gameEnded }
-        if chekWin {
-            showWinnerAlert()
-            gameEnded = true
-        } else if chekDraw {
-            showWinnerAlert()
-            gameEnded = true
-        }
-        return gameEnded
     }
 }
 

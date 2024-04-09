@@ -20,31 +20,10 @@ final class MainViewModel: NSObject {
     
     private var player1 = Player(name: "Player1", playerImage: "o", squares: [])
     private var player2 = Player(name: "Player2", playerImage: "x", squares: [])
+    private var currentPlayer: Player = Player(name: "", playerImage: "", squares: [0])
     private var squares = [Square]()
-    private let winningCombinations3x3 = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]
     
     // MARK: - Internal Methods
-    
-    func createPlayer(namep1: String, namep2: String) {
-        if namep1 != "" {
-            player1.name = namep1
-        } else if namep1 == "" {
-            player1.name = "Player 1"
-        }
-        if namep2 != "" {
-            player2.name = namep2
-        } else if namep2 == ""{
-            player2.name = "Player 2"
-        }
-    }
-    
-    func getPlayer1 () -> Player {
-        return player1
-    }
-    
-    func getPlayer2 () -> Player {
-        return player2
-    }
     
     func createBoard() {
         let group = DispatchGroup()
@@ -60,39 +39,88 @@ final class MainViewModel: NSObject {
         }
     }
     
-    func checkSquare (player: Player, squareIndex: Int) -> Bool {
-        if squares[squareIndex].isChecked {
-            return false
-        } else {
-            player.squares?.append(squareIndex)
-            squares[squareIndex].isChecked = true
-            squares[squareIndex].playerImage = UIImage(named: player.playerImage)
-            return true
-        }
+    func createPlayer() {
+        player1.name = "X"
+        player2.name = "O"
+        currentPlayer = player1
     }
     
-    func checkWin(player: Player) -> Bool {
-        var hasWon = false
-        onCheckWin?(false)
-        if let playerSquares = player.squares {
-            for numbers in winningCombinations3x3 {
-                if playerSquares.contains(numbers[0]) && playerSquares.contains(numbers[1]) &&
-                    playerSquares.contains(numbers[2]) {
-                    for square in squares {
-                        square.isChecked = true
-                    }
-                    hasWon = true
-                    onCheckWin?(true)
+    func checkSquare(square: Square) {
+        switch currentPlayer.name {
+        case player1.name:
+            if checkSquare(player: player1, squareIndex: square.squareIndex) == true {
+                if !winOrDraw() {
+                    currentPlayer = player2
                 }
             }
+        case player2.name:
+            if checkSquare(player: player2, squareIndex: square.squareIndex) == true {
+                if !winOrDraw() {
+                    currentPlayer = player1
+                }
+            }
+        default:
+            return
         }
-        return hasWon
     }
     
-    func checkDraw(hasWon: Bool) -> Bool {
+    // MARK: - Private Methods
+    
+    private func checkSquare (player: Player, squareIndex: Int) -> Bool {
+        guard !squares[squareIndex].isChecked else { return false }
+        player.squares?.append(squareIndex)
+        squares[squareIndex].isChecked = true
+        squares[squareIndex].playerImage = UIImage(named: player.playerImage)
+        return true
+    }
+    
+    private func checkWin(player: Player, boardSize: Int) -> Bool {
+        if let playerSquares = player.squares {
+            var board = [[Bool]](repeating: [Bool](repeating: false, count: boardSize), count: boardSize)
+            
+            for square in playerSquares {
+                let row = square / boardSize
+                let col = square % boardSize
+                board[row][col] = true
+            }
+            
+            for i in 0..<boardSize {
+                var horizontalWin = true
+                var verticalWin = true
+                for j in 0..<boardSize {
+                    if !board[i][j] {
+                        horizontalWin = false
+                    }
+                    if !board[j][i] {
+                        verticalWin = false
+                    }
+                }
+                if horizontalWin || verticalWin {
+                    return true
+                }
+            }
+            
+            var diagonalWin1 = true
+            var diagonalWin2 = true
+            for i in 0..<boardSize {
+                if !board[i][i] {
+                    diagonalWin1 = false
+                }
+                if !board[i][boardSize - 1 - i] {
+                    diagonalWin2 = false
+                }
+            }
+            if diagonalWin1 || diagonalWin2 {
+                return true
+            }
+        }
+        return false
+    }
+    
+    private func checkDraw(hasWon: Bool) -> Bool {
         var isDraw = false
         var index = 0
-        if hasWon == false {
+        if !hasWon {
             for square in squares {
                 if square.isChecked {
                     index += 1
@@ -106,7 +134,7 @@ final class MainViewModel: NSObject {
         return isDraw
     }
     
-    func resetBoard() {
+    private func resetBoard() {
         player1.squares?.removeAll()
         player2.squares?.removeAll()
         for square in squares {
@@ -117,4 +145,15 @@ final class MainViewModel: NSObject {
         self.onDataReload?(self.squares)
     }
     
+    private func winOrDraw() -> Bool {
+        var gameEnded = false
+        if checkWin(player: currentPlayer, boardSize: 3) {
+            coordinator?.showWinnerAlert(restart: resetBoard)
+            gameEnded = true
+        } else if checkDraw(hasWon: checkWin(player: currentPlayer, boardSize: 3)) {
+            coordinator?.showWinnerAlert(restart: resetBoard)
+            gameEnded = true
+        }
+        return gameEnded
+    }
 }
