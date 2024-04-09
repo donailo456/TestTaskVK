@@ -9,6 +9,10 @@ import UIKit
 
 final class MainCollectionViewCell: UICollectionViewCell {
     
+    enum Constants {
+        
+    }
+    
     // MARK: - Internal properties
     
     static let identifier = "MainCollectionViewCell"
@@ -18,7 +22,7 @@ final class MainCollectionViewCell: UICollectionViewCell {
     private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.backgroundColor = .clear
-        imageView.clipsToBounds = true
+//        imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.layer.cornerRadius = 5
@@ -28,7 +32,6 @@ final class MainCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
-       
     }
     
     @available(*, unavailable)
@@ -39,9 +42,10 @@ final class MainCollectionViewCell: UICollectionViewCell {
     // MARK: - Internal properties
     
     func configure(with boardIndex: Square?) {
-        imageView.image = boardIndex?.playerImage
+        DispatchQueue.main.async {
+            self.imageView.image = boardIndex?.playerImage
+        }
     }
-    
     
     // MARK: - Private Methods
     
@@ -53,10 +57,10 @@ final class MainCollectionViewCell: UICollectionViewCell {
     
     private func setupConstraint() {
         NSLayoutConstraint.activate([
-            imageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
-            imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            imageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
-            imageView.widthAnchor.constraint(equalToConstant: 76),
+            imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 5),
+            imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -5),
+            imageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
         ])
     }
+
 }

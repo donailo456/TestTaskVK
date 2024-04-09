@@ -9,6 +9,8 @@ import UIKit
 
 final class AppCoordinator: CoordinatorProtocol {
     
+    // MARK: - Internal properties
+    
     var parentCoordinator: CoordinatorProtocol?
     var children: [CoordinatorProtocol] = []
     var navigationController: UINavigationController
@@ -17,17 +19,10 @@ final class AppCoordinator: CoordinatorProtocol {
         self.navigationController = navigationController
     }
     
+    // MARK: - Internal Methods
+    
     func start() {
         showMainVC()
-    }
-    
-    private func showMainVC() {
-        let mainViewController = MainViewController()
-        let mainViewModel = MainViewModel.init()
-        mainViewModel.coordinator = self
-        
-        mainViewController.viewModel = mainViewModel
-        navigationController.pushViewController(mainViewController, animated: true)
     }
     
     func showWinnerAlert(restart: @escaping () -> Void) {
@@ -38,5 +33,16 @@ final class AppCoordinator: CoordinatorProtocol {
         }
         alertController.addAction(restartAction)
         navigationController.present(alertController, animated: true, completion: nil)
+    }
+    
+    // MARK: - Private Methods
+    
+    private func showMainVC() {
+        let mainViewController = MainViewController()
+        let mainViewModel = MainViewModel.init()
+        mainViewModel.coordinator = self
+        
+        mainViewController.viewModel = mainViewModel
+        navigationController.pushViewController(mainViewController, animated: true)
     }
 }

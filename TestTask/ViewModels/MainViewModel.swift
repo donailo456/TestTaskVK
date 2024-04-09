@@ -13,7 +13,7 @@ final class MainViewModel: NSObject {
     
     weak var coordinator: AppCoordinator?
     
-    var onDataReload: (([Square]?) -> Void)?
+    var onDataReload: (([Square]?, BoardSize) -> Void)?
     var onCheckWin: ((Bool) -> Void)?
     
     // MARK: - Private properties
@@ -22,20 +22,34 @@ final class MainViewModel: NSObject {
     private var player2 = Player(name: "Player2", playerImage: "x", squares: [])
     private var currentPlayer: Player = Player(name: "", playerImage: "", squares: [0])
     private var squares = [Square]()
+    private var boardSize: BoardSize?
+    private var boardSizeWin = 0
     
     // MARK: - Internal Methods
     
-    func createBoard() {
+    func createBoard(boardSize: BoardSize) {
         let group = DispatchGroup()
         
+        squares = []
+        resetBoard()
+        
         group.enter()
-        for index in 1...9 {
-            squares.append(Square(isChecked: false, squareIndex: index - 1, playerImage: nil))
+        switch boardSize {
+        case .small:
+            self.boardSize = .small
+            for index in 1...9 {
+                squares.append(Square(isChecked: false, squareIndex: index - 1, playerImage: nil))
+            }
+        case .big:
+            self.boardSize = .big
+            for index in 1...25{
+                squares.append(Square(isChecked: false, squareIndex: index - 1, playerImage: nil))
+            }
         }
         group.leave()
         
         group.notify(queue: DispatchQueue.main) {
-            self.onDataReload?(self.squares)
+            self.onDataReload?(self.squares, boardSize)
         }
     }
     
@@ -74,20 +88,28 @@ final class MainViewModel: NSObject {
         return true
     }
     
-    private func checkWin(player: Player, boardSize: Int) -> Bool {
+    private func checkWin(player: Player, size: BoardSize) -> Bool {
+        switch size {
+        case .small:
+            boardSizeWin = 3
+        case .big:
+            boardSizeWin = 5
+        }
         if let playerSquares = player.squares {
-            var board = [[Bool]](repeating: [Bool](repeating: false, count: boardSize), count: boardSize)
+            var board = [[Bool]](repeating: [Bool](repeating: false, count: boardSizeWin), count: boardSizeWin)
+            var diagonalWin1 = true
+            var diagonalWin2 = true
             
             for square in playerSquares {
-                let row = square / boardSize
-                let col = square % boardSize
+                let row = square / boardSizeWin
+                let col = square % boardSizeWin
                 board[row][col] = true
             }
             
-            for i in 0..<boardSize {
+            for i in 0..<boardSizeWin {
                 var horizontalWin = true
                 var verticalWin = true
-                for j in 0..<boardSize {
+                for j in 0..<boardSizeWin {
                     if !board[i][j] {
                         horizontalWin = false
                     }
@@ -100,13 +122,11 @@ final class MainViewModel: NSObject {
                 }
             }
             
-            var diagonalWin1 = true
-            var diagonalWin2 = true
-            for i in 0..<boardSize {
+            for i in 0..<boardSizeWin {
                 if !board[i][i] {
                     diagonalWin1 = false
                 }
-                if !board[i][boardSize - 1 - i] {
+                if !board[i][boardSizeWin - 1 - i] {
                     diagonalWin2 = false
                 }
             }
@@ -142,15 +162,15 @@ final class MainViewModel: NSObject {
             square.playerImage = nil
         }
         
-        self.onDataReload?(self.squares)
+        self.onDataReload?(self.squares, boardSize ?? .small)
     }
     
     private func winOrDraw() -> Bool {
         var gameEnded = false
-        if checkWin(player: currentPlayer, boardSize: 3) {
+        if checkWin(player: currentPlayer, size: boardSize ?? .small) {
             coordinator?.showWinnerAlert(restart: resetBoard)
             gameEnded = true
-        } else if checkDraw(hasWon: checkWin(player: currentPlayer, boardSize: 3)) {
+        } else if checkDraw(hasWon: checkWin(player: currentPlayer, size: boardSize ?? .small)) {
             coordinator?.showWinnerAlert(restart: resetBoard)
             gameEnded = true
         }

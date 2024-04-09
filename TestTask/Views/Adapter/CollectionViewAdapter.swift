@@ -36,6 +36,7 @@ final class CollectionViewAdapter: NSObject {
     private var dataSource: DataSource?
     private var snapshot = DataSourceSnapshot()
     private var cellDataSource: [Square]?
+    private var boardSize: BoardSize = .small
     
     init(collectionView: UICollectionView) {
         super.init()
@@ -45,11 +46,16 @@ final class CollectionViewAdapter: NSObject {
     
     // MARK: - Internal Methods
     
-    func reload(_ data: [Square]?) {
+    func reloadData(_ data: [Square]?, _ boardSize: BoardSize) {
         guard let data = data else { return }
+        self.boardSize = boardSize
         cellDataSource = data
         configureCollectionViewDataSource()
         applySnapshot(square: cellDataSource ?? [])
+        reloadCollection()
+    }
+    
+    func reloadCollection() {
         DispatchQueue.main.async {
             self.collectionView?.reloadData()
         }
@@ -93,7 +99,12 @@ extension CollectionViewAdapter: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        CGSize(width: 110, height: 110)
+        switch boardSize {
+        case .small:
+            return CGSize(width: 110, height: 110)
+        case .big:
+            return CGSize(width: 60, height: 60)
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
