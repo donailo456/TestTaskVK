@@ -9,6 +9,13 @@ import UIKit
 
 final class MainViewModel: NSObject {
     
+    // MARK: - Constants
+    
+    private enum Constants {
+        static let board3x3: Int = 3
+        static let board5x5: Int = 5
+    }
+    
     // MARK: - Internal properties
     
     weak var coordinator: AppCoordinator?
@@ -23,7 +30,7 @@ final class MainViewModel: NSObject {
     private var currentPlayer: Player = Player(name: "", playerImage: "", squares: [0])
     private var squares = [Square]()
     private var boardSize: BoardSize?
-    private var boardSizeWin = 0
+    private var currBoardSize = 0
     
     // MARK: - Internal Methods
     
@@ -91,25 +98,25 @@ final class MainViewModel: NSObject {
     private func checkWin(player: Player, size: BoardSize) -> Bool {
         switch size {
         case .small:
-            boardSizeWin = 3
+            currBoardSize = Constants.board3x3
         case .big:
-            boardSizeWin = 5
+            currBoardSize = Constants.board5x5
         }
         if let playerSquares = player.squares {
-            var board = [[Bool]](repeating: [Bool](repeating: false, count: boardSizeWin), count: boardSizeWin)
+            var board = [[Bool]](repeating: [Bool](repeating: false, count: currBoardSize), count: currBoardSize)
             var diagonalWin1 = true
             var diagonalWin2 = true
             
             for square in playerSquares {
-                let row = square / boardSizeWin
-                let col = square % boardSizeWin
+                let row = square / currBoardSize
+                let col = square % currBoardSize
                 board[row][col] = true
             }
             
-            for i in 0..<boardSizeWin {
+            for i in 0..<currBoardSize {
                 var horizontalWin = true
                 var verticalWin = true
-                for j in 0..<boardSizeWin {
+                for j in 0..<currBoardSize {
                     if !board[i][j] {
                         horizontalWin = false
                     }
@@ -122,11 +129,11 @@ final class MainViewModel: NSObject {
                 }
             }
             
-            for i in 0..<boardSizeWin {
+            for i in 0..<currBoardSize {
                 if !board[i][i] {
                     diagonalWin1 = false
                 }
-                if !board[i][boardSizeWin - 1 - i] {
+                if !board[i][currBoardSize - 1 - i] {
                     diagonalWin2 = false
                 }
             }

@@ -95,7 +95,7 @@ extension CollectionViewAdapter {
 extension CollectionViewAdapter: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         onDidSelectRow?(cellDataSource?[indexPath.row])
-        collectionView.reloadData()
+        reloadCollection()
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
