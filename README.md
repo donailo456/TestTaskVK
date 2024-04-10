@@ -34,7 +34,6 @@
 
 ```
     git clone https://github.com/donailo456/TestTaskVK.git
-    pod install
     cmd+r в Xcode 
 ```
 
