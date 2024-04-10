@@ -25,8 +25,8 @@ final class AppCoordinator: CoordinatorProtocol {
         showMainVC()
     }
     
-    func showWinnerAlert(restart: @escaping () -> Void) {
-        let alertController = UIAlertController(title: "Игра окончена", message: nil, preferredStyle: .alert)
+    func showWinnerAlert(player: String, restart: @escaping () -> Void) {
+        let alertController = UIAlertController(title: "Игра окончена, \(player)", message: nil, preferredStyle: .alert)
         let restartAction = UIAlertAction(title: "Начать заново", style: .default) { [weak self] _ in
             guard let self = self else { return }
             restart()

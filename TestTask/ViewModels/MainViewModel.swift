@@ -61,8 +61,8 @@ final class MainViewModel: NSObject {
     }
     
     func createPlayer() {
-        player1.name = "X"
-        player2.name = "O"
+        player1.name = "O"
+        player2.name = "X"
         currentPlayer = player1
     }
     
@@ -175,10 +175,10 @@ final class MainViewModel: NSObject {
     private func winOrDraw() -> Bool {
         var gameEnded = false
         if checkWin(player: currentPlayer, size: boardSize ?? .small) {
-            coordinator?.showWinnerAlert(restart: resetBoard)
+            coordinator?.showWinnerAlert(player: "выиграл игрок " + currentPlayer.name,restart: resetBoard)
             gameEnded = true
         } else if checkDraw(hasWon: checkWin(player: currentPlayer, size: boardSize ?? .small)) {
-            coordinator?.showWinnerAlert(restart: resetBoard)
+            coordinator?.showWinnerAlert(player: "ничья", restart: resetBoard)
             gameEnded = true
         }
         return gameEnded
