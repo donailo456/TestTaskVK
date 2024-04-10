@@ -27,6 +27,8 @@ class MainViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("3x3", for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 21, weight: .bold)
+        button.backgroundColor = .darkGray
+        button.layer.cornerRadius = 10
         button.addTarget(self, action: #selector(action3x3), for: .touchUpInside)
         return button
     }()
@@ -36,6 +38,8 @@ class MainViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("5x5", for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 21, weight: .bold)
+        button.backgroundColor = .darkGray
+        button.layer.cornerRadius = 10
         button.addTarget(self, action: #selector(action5x5), for: .touchUpInside)
         return button
     }()
@@ -67,10 +71,12 @@ class MainViewController: UIViewController {
             mainCollectionView.bottomAnchor.constraint(equalTo: button3x3.topAnchor),
             
             button3x3.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
+            button3x3.widthAnchor.constraint(equalToConstant: 120),
             button3x3.topAnchor.constraint(equalTo: mainCollectionView.bottomAnchor),
             button3x3.centerYAnchor.constraint(equalTo: button5x5.centerYAnchor),
             
             button5x5.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40),
+            button5x5.widthAnchor.constraint(equalToConstant: 120),
             button5x5.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -80),
             
         ])
