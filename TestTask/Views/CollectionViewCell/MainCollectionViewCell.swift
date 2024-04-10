@@ -40,9 +40,7 @@ final class MainCollectionViewCell: UICollectionViewCell {
     // MARK: - Internal properties
     
     func configure(with boardIndex: Square?) {
-        DispatchQueue.main.async {
-            self.imageView.image = boardIndex?.playerImage
-        }
+        self.imageView.image = boardIndex?.playerImage
     }
     
     // MARK: - Private Methods
